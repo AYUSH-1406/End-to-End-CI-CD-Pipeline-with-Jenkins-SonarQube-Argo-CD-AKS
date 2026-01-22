@@ -124,7 +124,7 @@ Argo CD automatically rolls back the application in AKS —
 ### 📂 Repositories
 
 * **Application Repository:**
-  `spring-boot-ci-cd`
+  `End-to-End-CI-CD-Pipeline-with-Jenkins-SonarQube-Argo-CD-AKS`
 * **GitOps Manifests Repository:**
   `spring-boot-manifests`
 
