@@ -1,82 +1,139 @@
-# Jenkins Pipeline for Java based application using Maven, SonarQube, Argo CD, Helm and Kubernetes
+## 🚀 End-to-End CI/CD Pipeline with Jenkins, SonarQube, Argo CD & AKS
 
 ![](https://user-images.githubusercontent.com/43399466/228301952-abc02ca2-9942-4a67-8293-f76647b6f9d8.png)
 
-Here are the step-by-step details to set up an **end-to-end Jenkins pipeline for a Java application using SonarQube, Argo CD, Helm, and Kubernetes:**
+### 📌 Overview
 
-**Prerequisites:**
+This project demonstrates a **production-grade end-to-end CI/CD pipeline** implementing **GitOps principles** for deploying a Spring Boot application on **Azure Kubernetes Service (AKS)**.
 
-- Java application code hosted on a Git repository
-- Jenkins server
-- Kubernetes cluster
-- Helm package manager
-- Argo CD
+The pipeline follows **industry best practices**:
 
-**Steps:**
-
-    1. Install the necessary Jenkins plugins:
-       1.1 Git plugin
-       1.2 Maven Integration plugin
-       1.3 Pipeline plugin
-       1.4 Kubernetes Continuous Deploy plugin
-
-    2. Create a new Jenkins pipeline:
-       2.1 In Jenkins, create a new pipeline job and configure it with the Git repository URL for the Java application.
-       2.2 Add a Jenkinsfile to the Git repository to define the pipeline stages.
-
-    3. Define the pipeline stages:
-        Stage 1: Checkout the source code from Git.
-        Stage 2: Build the Java application using Maven.
-        Stage 3: Run unit tests using JUnit and Mockito.
-        Stage 4: Run SonarQube analysis to check the code quality.
-        Stage 5: Package the application into a JAR file.
-        Stage 6: Deploy the application to a test environment using Helm.
-        Stage 7: Run user acceptance tests on the deployed application.
-        Stage 8: Promote the application to a production environment using Argo CD.
-
-    4. Configure Jenkins pipeline stages:
-        Stage 1: Use the Git plugin to check out the source code from the Git repository.
-        Stage 2: Use the Maven Integration plugin to build the Java application.
-        Stage 3: Use the JUnit and Mockito plugins to run unit tests.
-        Stage 4: Use the SonarQube plugin to analyze the code quality of the Java application.
-        Stage 5: Use the Maven Integration plugin to package the application into a JAR file.
-        Stage 6: Use the Kubernetes Continuous Deploy plugin to deploy the application to a test environment using Helm.
-        Stage 7: Use a testing framework like Selenium to run user acceptance tests on the deployed application.
-        Stage 8: Use Argo CD to promote the application to a production environment.
-
-    5. Set up Argo CD:
-        Install Argo CD on the Kubernetes cluster.
-        Set up a Git repository for Argo CD to track the changes in the Helm charts and Kubernetes manifests.
-        Create a Helm chart for the Java application that includes the Kubernetes manifests and Helm values.
-        Add the Helm chart to the Git repository that Argo CD is tracking.
-
-    6. Configure Jenkins pipeline to integrate with Argo CD:
-       6.1 Add the Argo CD API token to Jenkins credentials.
-       6.2 Update the Jenkins pipeline to include the Argo CD deployment stage.
-
-    7. Run the Jenkins pipeline:
-       7.1 Trigger the Jenkins pipeline to start the CI/CD process for the Java application.
-       7.2 Monitor the pipeline stages and fix any issues that arise.
-
-This end-to-end Jenkins pipeline will automate the entire CI/CD process for a Java application, from code checkout to production deployment, using popular tools like SonarQube, Argo CD, Helm, and Kubernetes.
-
-## 🛠️ Author & Community  
-
-This project is crafted by **[Harshhaa](https://github.com/NotHarshhaa)** 💡.  
-I’d love to hear your feedback! Feel free to share your thoughts.  
-
-📧 **Connect with me:**
-
-- **GitHub**: [@NotHarshhaa](https://github.com/NotHarshhaa)
-- **Blog**: [ProDevOpsGuy](https://blog.prodevopsguytech.com)  
-- **Telegram Community**: [Join Here](https://t.me/prodevopsguy)  
+* Jenkins handles **CI only**
+* Git is the **single source of truth**
+* Argo CD manages **continuous delivery**
+* Kubernetes deployments are **fully automated**
+* Rollbacks are performed via **Git revert**
 
 ---
 
-## ⭐ Support the Project  
+### 🏗️ Architecture
 
-If you found this helpful, consider **starring** ⭐ the repository and sharing it with your network! 🚀  
+```
+Developer → GitHub (App Repo)
+                |
+                |  CI (Jenkins)
+                |  - Maven Build
+                |  - SonarQube Quality Gate
+                |  - Unit Tests
+                |  - Docker Image Build & Push
+                |  - Update GitOps Manifests
+                v
+         GitHub (Manifests Repo)
+                |
+                |  CD (Argo CD – GitOps)
+                v
+        Azure Kubernetes Service (AKS)
+```
 
-### 📢 Stay Connected  
+---
 
-![Follow Me](https://imgur.com/2j7GSPs.png)
+### 🛠️ Tech Stack
+
+* **Programming Language:** Java (Spring Boot)
+* **CI:** Jenkins
+* **Code Quality:** SonarQube (Quality Gates enforced)
+* **Containerization:** Docker
+* **Container Registry:** Docker Hub
+* **CD / GitOps:** Argo CD
+* **Orchestration:** Kubernetes
+* **Cloud Platform:** Azure (AKS)
+* **IaC / Config:** Kubernetes Manifests (GitOps)
+
+---
+
+### 🔁 CI Pipeline (Jenkins)
+
+**Triggered on every GitHub push**
+
+Stages:
+
+1. Checkout source code
+2. Maven build
+3. SonarQube analysis
+4. Quality Gate validation (fail pipeline if not passed)
+5. Unit tests
+6. Docker image build & push (tagged with Git commit SHA)
+7. Update Kubernetes manifests repository (GitOps)
+
+> Jenkins never runs `kubectl`.
+> It only updates Git — following true GitOps principles.
+
+---
+
+### 🚢 CD Pipeline (Argo CD)
+
+* Argo CD continuously watches the **manifests repository**
+* Automatically syncs changes to AKS
+* Performs rolling updates
+* Self-heals drift
+* Enables instant rollback via Git revert
+
+---
+
+### 🔄 Rollback Strategy
+
+```bash
+git revert <commit-id>
+git push
+```
+
+Argo CD automatically rolls back the application in AKS —
+**no Jenkins, no kubectl, no manual intervention**.
+
+---
+
+### 🔐 Security & Best Practices
+
+* Fine-grained GitHub tokens
+* Non-root Docker images
+* SonarQube quality gate enforcement
+* Immutable Docker image tags
+* Git-based audit trail
+* Separation of CI and CD responsibilities
+
+---
+
+### 📸 Proof of Deployment
+
+* Application successfully running on AKS
+* Pods pulling image tagged with Git commit SHA
+* Argo CD showing **Synced & Healthy** state
+
+---
+
+### 📌 Key Learnings
+
+* Real-world Jenkins pipeline design
+* SonarQube webhook-based quality gates
+* GitOps deployment model
+* AKS production deployment patterns
+* Debugging CI/CD issues in distributed systems
+
+---
+
+### 📂 Repositories
+
+* **Application Repository:**
+  `spring-boot-ci-cd`
+* **GitOps Manifests Repository:**
+  `spring-boot-manifests`
+
+---
+
+### 👨‍💻 Author
+
+**Ayush Srivastava**
+DevOps | Cloud | Kubernetes | CI/CD
+
+---
+
