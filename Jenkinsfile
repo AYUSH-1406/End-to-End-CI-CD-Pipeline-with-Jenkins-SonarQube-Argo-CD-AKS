@@ -58,5 +58,8 @@ pipeline {
     success {
       echo "✅ Jenkins CI completed successfully"
     }
-    failure {
-      echo "❌ Jenkins CI fa
+     failure {
+      echo "❌ Jenkins CI failed"
+    }
+  }
+}
