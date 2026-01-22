@@ -68,14 +68,36 @@ pipeline {
         }
       }
     }
+
+    stage('Update GitOps Manifests') {
+      steps {
+        withCredentials([string(
+          credentialsId: 'github-token',
+          variable: 'GITHUB_TOKEN'
+        )]) {
+          sh '''
+            rm -rf spring-boot-manifests
+
+            git clone https://${GITHUB_TOKEN}@github.com/AYUSH-1406/spring-boot-manifests.git
+            cd spring-boot-manifests/base
+
+            sed -i "s|image: .*|image: ayush1406/spring-boot-app:${GIT_COMMIT}|" deployment.yaml
+
+            git add deployment.yaml
+            git commit -m "Update image to ${GIT_COMMIT}"
+            git push origin main
+          '''
+        }
+      }
+    }
   }
 
   post {
     success {
-      echo "✅ CI pipeline completed successfully"
+      echo "✅ CI + GitOps pipeline completed successfully"
     }
     failure {
-      echo "❌ CI pipeline failed"
+      echo "❌ CI + GitOps pipeline failed"
     }
   }
 }
