@@ -2,8 +2,6 @@
 
 ![](https://user-images.githubusercontent.com/43399466/228301952-abc02ca2-9942-4a67-8293-f76647b6f9d8.png)
 
-## 🔗 BLOG URL HERE: https://harshhaa.hashnode.dev/streamlining-cicd-workflow-with-github-jenkins-sonarqube-docker-argocd-and-gitops
-
 Here are the step-by-step details to set up an **end-to-end Jenkins pipeline for a Java application using SonarQube, Argo CD, Helm, and Kubernetes:**
 
 **Prerequisites:**
